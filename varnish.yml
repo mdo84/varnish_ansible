@@ -1,0 +1,31 @@
+---
+- hosts: netcup2
+  remote_user: mdo
+  become: yes
+  become_user: root
+  tasks:
+  - name: ensure varnish is at the latest Version
+    yum:
+      name: varnish
+      state: latest
+  - name: write the varnish default vcl file
+    template:
+      src: config/default.vcl
+      dest: /etc/varnish/default.vcl
+    notify:
+    - restart varnish
+  - name: write the varnish paramsfile
+    template:
+      src: config/varnish.params
+      dest: /etc/varnish/varnish.params
+    notify:
+    - restart varnish
+  - name: ensure varnish is running
+    service:
+      name: varnish
+      state: started
+  handlers:
+    - name: restart varnish
+      service:
+        name: varnish
+        state: restarted

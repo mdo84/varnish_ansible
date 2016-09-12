@@ -1,0 +1,6 @@
+---
+- hosts: netcup2
+  remote_user: mdo
+  tasks:
+  - name: do some awesome shit
+    command: uptime
